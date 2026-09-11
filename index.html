@@ -232,6 +232,35 @@ document.addEventListener("click", function (event) {
 
 });
 </script>
+
+<script>
+document.addEventListener("click", function (event) {
+
+  const link = event.target.closest(".footer a");
+
+  if (!link) return;
+
+  const img = link.querySelector("img");
+
+  const target = img?.alt || "unknown";
+
+  const data = JSON.stringify({
+    event: "footer_click",
+    target: target,
+    page: window.location.pathname
+  });
+
+  navigator.sendBeacon(
+    "https://stats.imaginetic.cl/event",
+    new Blob(
+      [data],
+      { type: "application/json" }
+    )
+  );
+
+});
+</script>
+
   
 </body>
 </html>
