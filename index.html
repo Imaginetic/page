@@ -246,5 +246,74 @@ document.addEventListener("click", function (event) {
 });
 </script>
 
+
+  <!-- Analytics: YouTube -->
+<script>
+(function () {
+
+  const iframe = document.getElementById("imaginetic-youtube");
+
+  if (!iframe) return;
+
+  let youtubePlaySent = false;
+
+  function sendYouTubeEvent(eventName) {
+
+    const data = JSON.stringify({
+      event: eventName,
+      target: "Reel Imaginetic Studios",
+      page: window.location.pathname
+    });
+
+    navigator.sendBeacon(
+      "https://stats.imaginetic.cl/event",
+      new Blob(
+        [data],
+        { type: "application/json" }
+      )
+    );
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+
+    new YT.Player(iframe, {
+
+      events: {
+
+        onStateChange: function (event) {
+
+          /*
+           * 1 = PLAYING
+           */
+          if (
+            event.data === YT.PlayerState.PLAYING &&
+            !youtubePlaySent
+          ) {
+
+            youtubePlaySent = true;
+
+            sendYouTubeEvent("youtube_play");
+
+          }
+
+        }
+
+      }
+
+    });
+
+  };
+
+  const tag = document.createElement("script");
+
+  tag.src = "https://www.youtube.com/iframe_api";
+
+  document.head.appendChild(tag);
+
+})();
+</script>
+
+
+  
 </body>
 </html>
