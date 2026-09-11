@@ -129,6 +129,7 @@
   allowfullscreen>
 </iframe>
 
+
   </div>
 
 
@@ -248,6 +249,7 @@ document.addEventListener("click", function (event) {
 
 
   <!-- Analytics: YouTube -->
+<!-- Analytics: YouTube -->
 <script>
 (function () {
 
@@ -256,11 +258,16 @@ document.addEventListener("click", function (event) {
   if (!iframe) return;
 
   let youtubePlaySent = false;
+  let player = null;
 
-  function sendYouTubeEvent(eventName) {
+  function sendYouTubePlay() {
+
+    if (youtubePlaySent) return;
+
+    youtubePlaySent = true;
 
     const data = JSON.stringify({
-      event: eventName,
+      event: "youtube_play",
       target: "Reel Imaginetic Studios",
       page: window.location.pathname
     });
@@ -276,26 +283,32 @@ document.addEventListener("click", function (event) {
 
   window.onYouTubeIframeAPIReady = function () {
 
-    new YT.Player(iframe, {
+    player = new YT.Player("imaginetic-youtube", {
 
       events: {
 
+        onReady: function () {
+          console.log("YouTube Analytics: reproductor listo");
+        },
+
         onStateChange: function (event) {
 
-          /*
-           * 1 = PLAYING
-           */
-          if (
-            event.data === YT.PlayerState.PLAYING &&
-            !youtubePlaySent
-          ) {
+          console.log(
+            "YouTube Analytics: estado",
+            event.data
+          );
 
-            youtubePlaySent = true;
-
-            sendYouTubeEvent("youtube_play");
-
+          if (event.data === YT.PlayerState.PLAYING) {
+            sendYouTubePlay();
           }
 
+        },
+
+        onError: function (event) {
+          console.log(
+            "YouTube Analytics: error",
+            event.data
+          );
         }
 
       }
@@ -312,6 +325,7 @@ document.addEventListener("click", function (event) {
 
 })();
 </script>
+
 
 
   
