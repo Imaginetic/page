@@ -205,14 +205,16 @@
 <script>
 document.addEventListener("click", function (event) {
 
-  const link = event.target.closest("footer a");
+  const link = event.target.closest(".footer a");
 
   if (!link) return;
 
+  const image = link.querySelector("img");
+
   const target =
-    link.dataset.analytics ||
+    image?.alt ||
     link.getAttribute("href") ||
-    link.textContent.trim();
+    "unknown";
 
   fetch("https://stats.imaginetic.cl/event", {
     method: "POST",
@@ -230,8 +232,6 @@ document.addEventListener("click", function (event) {
 
 });
 </script>
-
   
 </body>
-
 </html>
