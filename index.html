@@ -118,7 +118,7 @@
 
   <div class="container video d-flex justify-content-center d-block d-sm-none">
     <iframe
-  id="imaginetic-youtube"
+  class="imaginetic-youtube"
   width="288"
   height="169"
   src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
@@ -134,7 +134,7 @@
 
 
   <div class="container video d-flex justify-content-center d-none d-sm-block d-md-none ">
-    <iframe id="imaginetic-youtube" class="d-flex justify-content-center" width="420" height="246"
+    <iframe class="imaginetic-youtube" class="d-flex justify-content-center" width="420" height="246"
       src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
       title="Reel Imaginetic Studios"
       frameborder="0"
@@ -145,7 +145,7 @@
   </div>
 
   <div class="container video d-none d-md-block d-lg-none">
-    <iframe id="imaginetic-youtube" width="540" height="315" src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
+    <iframe class="imaginetic-youtube" width="540" height="315" src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
   title="Reel Imaginetic Studios"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -156,7 +156,7 @@
   </div>
 
   <div class="container video d-flex justify-content-center d-none d-lg-block">
-    <iframe id="imaginetic-youtube" width="663" height="363" src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
+    <iframe class="imaginetic-youtube" width="663" height="363" src="https://www.youtube.com/embed/gpdfuGzZtBo?enablejsapi=1&origin=https://imaginetic.cl"
       title="Reel Imaginetic Studios" frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -255,17 +255,15 @@ document.addEventListener("click", function (event) {
 </script>
 
 
-  <!-- Analytics: YouTube -->
 <!-- Analytics: YouTube -->
 <script>
 (function () {
 
-  const iframe = document.getElementById("imaginetic-youtube");
+  const iframes = document.querySelectorAll(".imaginetic-youtube");
 
-  if (!iframe) return;
+  if (!iframes.length) return;
 
   let youtubePlaySent = false;
-  let player = null;
 
   function sendYouTubePlay() {
 
@@ -286,43 +284,56 @@ document.addEventListener("click", function (event) {
         { type: "application/json" }
       )
     );
+
+    console.log("YouTube Analytics: play registrado");
   }
+
 
   window.onYouTubeIframeAPIReady = function () {
 
-    window.player = new YT.Player("imaginetic-youtube", {
+    iframes.forEach(function (iframe) {
 
-      events: {
+      new YT.Player(iframe, {
 
-        onReady: function () {
-          console.log("YouTube Analytics: reproductor listo");
-        },
+        events: {
 
-        onStateChange: function (event) {
+          onReady: function () {
+            console.log(
+              "YouTube Analytics: reproductor listo"
+            );
+          },
 
-          console.log(
-            "YouTube Analytics: estado",
-            event.data
-          );
+          onStateChange: function (event) {
 
-          if (event.data === YT.PlayerState.PLAYING) {
-            sendYouTubePlay();
+            console.log(
+              "YouTube Analytics: estado",
+              event.data
+            );
+
+            if (
+              event.data ===
+              YT.PlayerState.PLAYING
+            ) {
+              sendYouTubePlay();
+            }
+
+          },
+
+          onError: function (event) {
+            console.log(
+              "YouTube Analytics: error",
+              event.data
+            );
           }
 
-        },
-
-        onError: function (event) {
-          console.log(
-            "YouTube Analytics: error",
-            event.data
-          );
         }
 
-      }
+      });
 
     });
 
   };
+
 
   const tag = document.createElement("script");
 
@@ -332,7 +343,6 @@ document.addEventListener("click", function (event) {
 
 })();
 </script>
-
 
 
   
