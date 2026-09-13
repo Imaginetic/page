@@ -203,13 +203,13 @@
       </p>
     </div>
   </div>
-
-
-
 <script>
   document.getElementById("current-year").textContent =
   new Date().getFullYear();
 </script>
+
+  
+  
 <!-- script país visitante -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -361,26 +361,84 @@ document.addEventListener("click", function (event) {
 
           onStateChange: function (event) {
 
-            console.log(
-              "YouTube Analytics: estado",
-              event.data
-            );
+  console.log(
+    "YouTube Analytics: estado",
+    event.data
+  );
 
-            if (
-              event.data ===
-              YT.PlayerState.PLAYING
-            ) {
-              sendYouTubePlay();
-            }
+  let eventName = null;
 
-          },
+  if (
+    event.data ===
+    YT.PlayerState.PLAYING
+  ) {
+    eventName = "youtube_play";
+
+  } else if (
+    event.data ===
+    YT.PlayerState.PAUSED
+  ) {
+    eventName = "youtube_pause";
+
+  } else if (
+    event.data ===
+    YT.PlayerState.ENDED
+  ) {
+    eventName = "youtube_ended";
+
+  } else if (
+    event.data ===
+    YT.PlayerState.BUFFERING
+  ) {
+    eventName = "youtube_buffering";
+
+  } else if (
+    event.data ===
+    YT.PlayerState.CUED
+  ) {
+    eventName = "youtube_cued";
+  }
+
+  if (!eventName) return;
+
+  const data = JSON.stringify({
+    event: eventName,
+    target: "Reel Imaginetic Studios",
+    page: window.location.pathname
+  });
+
+  navigator.sendBeacon(
+    "https://stats.imaginetic.cl/event",
+    new Blob(
+      [data],
+      { type: "application/json" }
+    )
+  );
+
+},
 
           onError: function (event) {
-            console.log(
-              "YouTube Analytics: error",
-              event.data
-            );
-          }
+
+  console.log(
+    "YouTube Analytics: error",
+    event.data
+  );
+
+  const data = JSON.stringify({
+    event: "youtube_error",
+    target: "Reel Imaginetic Studios",
+    page: window.location.pathname
+  });
+
+  navigator.sendBeacon(
+    "https://stats.imaginetic.cl/event",
+    new Blob(
+      [data],
+      { type: "application/json" }
+    )
+  );
+
+},
 
         }
 
