@@ -189,7 +189,7 @@
       </div>
     </div>
     <div class="d-none d-sm-block">
-      <p>Síguenos en nuestras redes
+      <p><span id="current-year"></span> - Síguenos en nuestras redes
         <a href="https://wa.me/56999949949/?text=Hola,%20quiero%20contactarte%20para%20trabajo.%20Saludos."
           target="_blank"><img src="assets/img/wp-icon.png" class="socialmedia" alt="Whatsapp"></a>
         <a href="https://www.behance.net/imaginetic" target="_blank"><img src="assets/img/be-icon.png"
@@ -206,21 +206,77 @@
 
 
 
-
-  
+<script>
+  document.getElementById("current-year").textContent =
+  new Date().getFullYear();
+</script>
 <!-- script país visitante -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+
+
+
 <script>
 (function () {
-  fetch("https://stats.imaginetic.cl/track", {
-    method: "GET",
-    credentials: "include",
-    keepalive: true
-  }).catch(() => {});
+
+  const params = new URLSearchParams(window.location.search);
+  const sourceParam = params.get("source");
+
+  const referrer = document.referrer.toLowerCase();
+
+  let source = sourceParam;
+
+  if (!source) {
+
+    if (
+      referrer.includes("youtube.com") ||
+      referrer.includes("youtu.be")
+    ) {
+      source = "YouTube";
+
+    } else if (
+      referrer.includes("instagram.com")
+    ) {
+      source = "Instagram";
+
+    } else if (
+      referrer.includes("linkedin.com") ||
+      referrer.includes("lnkd.in")
+    ) {
+      source = "LinkedIn";
+
+    } else if (
+      referrer.includes("chiletrabajos.cl")
+    ) {
+      source = "Chiletrabajos";
+
+    } else if (
+      referrer.includes("google.com")
+    ) {
+      source = "Google";
+
+    } else if (!referrer) {
+      source = "Directo";
+
+    } else {
+      source = "Otros";
+    }
+  }
+
+  fetch(
+    "https://stats.imaginetic.cl/track?source=" +
+    encodeURIComponent(source),
+    {
+      method: "GET",
+      credentials: "include",
+      keepalive: true
+    }
+  ).catch(() => {});
+
 })();
 </script>
+  
 
   <!-- Analytics: clicks del footer -->
 <script>
