@@ -147,3 +147,9 @@ h1 {
   @media (min-width: 1200px) {
     h5 {font-size: 3.3vw;}
   }
+
+.games-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
