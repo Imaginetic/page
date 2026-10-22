@@ -153,3 +153,9 @@ h1 {
     flex-direction: column;
     align-items: center;
 }
+
+.games-section p {
+    display: block;
+    width: 100%;
+    margin: 0 0 1rem;
+}
